@@ -25,6 +25,17 @@ async function run() {
     // Connect the client to the server
     // await client.connect();
 
+    // Connect to the "phoneHubDB" database and access its "user" collection
+    const brandCollection = client.db("phoneHubDB").collection("brand");
+
+    // Insert brand into database
+    app.post("/brand", async (req, res) => {
+      const newBrand = req.body;
+      console.log(newBrand);
+      const result = await brandCollection.insertOne(newBrand);
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ ping: 1 });
     console.log(
