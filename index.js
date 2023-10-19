@@ -52,9 +52,17 @@ async function run() {
       res.send(result);
     });
 
-    // Find brand from database
-    app.get("/product", async (req, res) => {
-      const cursor = productCollection.find();
+    // Find product from database
+    // app.get("/product", async (req, res) => {
+    //   const cursor = productCollection.find();
+    //   const result = await cursor.toArray();
+    //   res.send(result);
+    // });
+
+    // Find product from database based on brand
+    app.get("/product/:brand_name", async (req, res) => {
+      const brandName = req.params.brand_name;
+      const cursor = productCollection.find({ brand_name: brandName });
       const result = await cursor.toArray();
       res.send(result);
     });
