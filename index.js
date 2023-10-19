@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -53,17 +53,50 @@ async function run() {
     });
 
     // Find product from database
-    // app.get("/product", async (req, res) => {
-    //   const cursor = productCollection.find();
-    //   const result = await cursor.toArray();
-    //   res.send(result);
-    // });
+    app.get("/product", async (req, res) => {
+      const cursor = productCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
 
     // Find product from database based on brand
     app.get("/product/:brand_name", async (req, res) => {
       const brandName = req.params.brand_name;
       const cursor = productCollection.find({ brand_name: brandName });
       const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    // Find single product from database based on id
+    app.get("/products/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await productCollection.findOne(query);
+      res.send(result);
+    });
+
+    // Update existing product from database based on id
+    app.put("/products/:id", async (req, res) => {
+      const id = req.params.id;
+      const updateProduct = req.body;
+      console.log({ updateProduct, id });
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updated = {
+        $set: {
+          product_name: updateProduct.product_name,
+          product_img: updateProduct.product_img,
+          brand_name: updateProduct.brand_name,
+          type: updateProduct.type,
+          price: updateProduct.price,
+          rating: updateProduct.rating,
+        },
+      };
+      const result = await productCollection.updateOne(
+        filter,
+        updated,
+        options
+      );
       res.send(result);
     });
 
