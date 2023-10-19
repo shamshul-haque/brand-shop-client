@@ -27,6 +27,7 @@ async function run() {
 
     // Connect to the "phoneHubDB" database and access its "user" collection
     const brandCollection = client.db("phoneHubDB").collection("brand");
+    const productCollection = client.db("phoneHubDB").collection("product");
 
     // Insert brand into database
     app.post("/brand", async (req, res) => {
@@ -40,6 +41,14 @@ async function run() {
     app.get("/brand", async (req, res) => {
       const cursor = brandCollection.find();
       const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    // Insert product into database
+    app.post("/product", async (req, res) => {
+      const newProduct = req.body;
+      console.log(newProduct);
+      const result = await productCollection.insertOne(newProduct);
       res.send(result);
     });
 
