@@ -28,6 +28,7 @@ async function run() {
     // Connect to the "phoneHubDB" database and access its "user" collection
     const brandCollection = client.db("phoneHubDB").collection("brand");
     const productCollection = client.db("phoneHubDB").collection("product");
+    const cartCollection = client.db("phoneHubDB").collection("cart");
 
     // Insert brand into database
     app.post("/brand", async (req, res) => {
@@ -44,7 +45,7 @@ async function run() {
       res.send(result);
     });
 
-    // Insert product into database
+    // Insert product into product database
     app.post("/product", async (req, res) => {
       const newProduct = req.body;
       console.log(newProduct);
@@ -63,6 +64,29 @@ async function run() {
     app.get("/product/:brand_name", async (req, res) => {
       const brandName = req.params.brand_name;
       const cursor = productCollection.find({ brand_name: brandName });
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    // Insert product into cart database
+    app.post("/cart", async (req, res) => {
+      const cart = req.body;
+      console.log(cart);
+      const result = await cartCollection.insertOne(cart);
+      res.send(result);
+    });
+
+    // Find cart from database
+    app.get("/cart", async (req, res) => {
+      const cursor = cartCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    // Find cart from database based on email
+    app.get("/cart/:email", async (req, res) => {
+      const emailAddr = req.params.email;
+      const cursor = cartCollection.find({ email: emailAddr });
       const result = await cursor.toArray();
       res.send(result);
     });
