@@ -117,12 +117,12 @@ async function run() {
     });
 
     // Find cart from database based on email
-    // app.get("/cart/:email", async (req, res) => {
-    //   const emailAddr = req.params.email;
-    //   const cursor = cartCollection.find({ email: emailAddr });
-    //   const result = await cursor.toArray();
-    //   res.send(result);
-    // });
+    app.get("/cart/:email", async (req, res) => {
+      const emailAddr = req.params.email;
+      const cursor = cartCollection.find({ email: emailAddr });
+      const result = await cursor.toArray();
+      res.send(result);
+    });
 
     // delete item from cart database
     app.delete("/cart/:id", async (req, res) => {
