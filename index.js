@@ -45,14 +45,6 @@ async function run() {
       res.send(result);
     });
 
-    // Insert product into product database
-    app.post("/product", async (req, res) => {
-      const newProduct = req.body;
-      console.log(newProduct);
-      const result = await productCollection.insertOne(newProduct);
-      res.send(result);
-    });
-
     // Find product from database
     app.get("/product", async (req, res) => {
       const cursor = productCollection.find();
@@ -68,34 +60,19 @@ async function run() {
       res.send(result);
     });
 
-    // Insert product into cart database
-    app.post("/cart", async (req, res) => {
-      const cart = req.body;
-      console.log(cart);
-      const result = await cartCollection.insertOne(cart);
-      res.send(result);
-    });
-
-    // Find cart from database
-    app.get("/cart", async (req, res) => {
-      const cursor = cartCollection.find();
-      const result = await cursor.toArray();
-      res.send(result);
-    });
-
-    // Find cart from database based on email
-    app.get("/cart/:email", async (req, res) => {
-      const emailAddr = req.params.email;
-      const cursor = cartCollection.find({ email: emailAddr });
-      const result = await cursor.toArray();
-      res.send(result);
-    });
-
     // Find single product from database based on id
     app.get("/products/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await productCollection.findOne(query);
+      res.send(result);
+    });
+
+    // Insert product into product database
+    app.post("/product", async (req, res) => {
+      const newProduct = req.body;
+      console.log(newProduct);
+      const result = await productCollection.insertOne(newProduct);
       res.send(result);
     });
 
@@ -121,6 +98,37 @@ async function run() {
         updated,
         options
       );
+      res.send(result);
+    });
+
+    // Insert product into cart database
+    app.post("/cart", async (req, res) => {
+      const cart = req.body;
+      console.log(cart);
+      const result = await cartCollection.insertOne(cart);
+      res.send(result);
+    });
+
+    // Find cart from database
+    app.get("/cart", async (req, res) => {
+      const cursor = cartCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    // Find cart from database based on email
+    // app.get("/cart/:email", async (req, res) => {
+    //   const emailAddr = req.params.email;
+    //   const cursor = cartCollection.find({ email: emailAddr });
+    //   const result = await cursor.toArray();
+    //   res.send(result);
+    // });
+
+    // delete item from cart database
+    app.delete("/cart/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await cartCollection.deleteOne(query);
       res.send(result);
     });
 
