@@ -30,7 +30,7 @@ async function run() {
     const productCollection = client.db("phoneHubDB").collection("product");
     const cartCollection = client.db("phoneHubDB").collection("cart");
 
-    // Insert brand into database
+    // Insert single brand into brand collection
     app.post("/brand", async (req, res) => {
       const newBrand = req.body;
       console.log(newBrand);
@@ -38,37 +38,14 @@ async function run() {
       res.send(result);
     });
 
-    // Find brand from database
+    // Find all brands from brand collection
     app.get("/brand", async (req, res) => {
       const cursor = brandCollection.find();
       const result = await cursor.toArray();
       res.send(result);
     });
 
-    // Find product from database
-    app.get("/product", async (req, res) => {
-      const cursor = productCollection.find();
-      const result = await cursor.toArray();
-      res.send(result);
-    });
-
-    // Find product from database based on brand
-    app.get("/product/:brand_name", async (req, res) => {
-      const brandName = req.params.brand_name;
-      const cursor = productCollection.find({ brand_name: brandName });
-      const result = await cursor.toArray();
-      res.send(result);
-    });
-
-    // Find single product from database based on id
-    app.get("/products/:id", async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: new ObjectId(id) };
-      const result = await productCollection.findOne(query);
-      res.send(result);
-    });
-
-    // Insert product into product database
+    // Insert products into product collection
     app.post("/product", async (req, res) => {
       const newProduct = req.body;
       console.log(newProduct);
@@ -76,7 +53,30 @@ async function run() {
       res.send(result);
     });
 
-    // Update existing product from database based on id
+    // Find all product from product collection
+    app.get("/product", async (req, res) => {
+      const cursor = productCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    // Find all product from product database based on brand categories
+    app.get("/product/:brand_name", async (req, res) => {
+      const brandName = req.params.brand_name;
+      const cursor = productCollection.find({ brand_name: brandName });
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    // Find single product from product collection based on product id
+    app.get("/products/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await productCollection.findOne(query);
+      res.send(result);
+    });
+
+    // Update single existing product from product collection based on product id
     app.put("/products/:id", async (req, res) => {
       const id = req.params.id;
       const updateProduct = req.body;
@@ -101,7 +101,7 @@ async function run() {
       res.send(result);
     });
 
-    // Insert product into cart database
+    // Insert single product into cart collection
     app.post("/cart", async (req, res) => {
       const cart = req.body;
       console.log(cart);
@@ -109,14 +109,14 @@ async function run() {
       res.send(result);
     });
 
-    // Find cart from database
+    // Find all selected product from cart collection
     app.get("/cart", async (req, res) => {
       const cursor = cartCollection.find();
       const result = await cursor.toArray();
       res.send(result);
     });
 
-    // Find cart from database based on email
+    // Find all product from cart collection based on email
     app.get("/cart/:email", async (req, res) => {
       const emailAddr = req.params.email;
       const cursor = cartCollection.find({ email: emailAddr });
@@ -124,7 +124,7 @@ async function run() {
       res.send(result);
     });
 
-    // delete item from cart database
+    // delete single product from cart collection
     app.delete("/cart/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
